@@ -164,13 +164,15 @@
     new google.maps.LatLng(21.035407306267413, 105.84823364232683),
     new google.maps.LatLng(21.036165853731504, 105.84839189265871),
     new google.maps.LatLng(21.036213419285374, 105.847724022614),
-    new google.maps.LatLng(21.036265991722, 105.84706688140535)
+    new google.maps.LatLng(21.036265991722, 105.84706688140535),
+    new google.maps.LatLng(21.0339667963671, 105.84991132721396)
     ];
     let adj = {};
     for (let i = 0; i < intersections.length; i++)
     {
         adj[intersections[i].toString()] = [];
     }
+    adj[intersections[16].toString()].push(intersections[0]);
     adj[intersections[15].toString()].push(intersections[14], intersections[10]);
     adj[intersections[14].toString()].push(intersections[15], intersections[11], intersections[13]);
     adj[intersections[13].toString()].push(intersections[14], intersections[12]);
@@ -186,7 +188,7 @@
     adj[intersections[3].toString()].push(intersections[4], intersections[2]);
     adj[intersections[2].toString()].push(intersections[1], intersections[3]);
     adj[intersections[1].toString()].push(intersections[2], intersections[5], intersections[0]);
-    adj[intersections[0].toString()].push(intersections[1], intersections[6]);
+    adj[intersections[0].toString()].push(intersections[1], intersections[6], intersections[16]);
 
     function approximateDistance(latlng1, latlng2) {
         return google.maps.geometry.spherical.computeDistanceBetween(latlng1, latlng2);
@@ -303,7 +305,7 @@
                 Route.splice(1,1);
             }
             let siz = Route.length;
-            if(isOnSegment(Route[siz - 1],Route[siz - 2],Route[siz - 3]))
+            if(siz > 2 && isOnSegment(Route[siz - 1],Route[siz - 2],Route[siz - 3]))
             {
                 Route.splice(siz - 2, 1);
             }
