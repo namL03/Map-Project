@@ -191,7 +191,6 @@
     adj[intersections[2].toString()].push(intersections[1], intersections[3]);
     adj[intersections[1].toString()].push(intersections[2], intersections[5], intersections[0]);
     adj[intersections[0].toString()].push(intersections[1], intersections[6], intersections[16]);
-
     function approximateDistance(latlng1, latlng2) {
         return google.maps.geometry.spherical.computeDistanceBetween(latlng1, latlng2);
     }
@@ -328,7 +327,7 @@
     let infoWindow = new google.maps.InfoWindow();
 
     path.addListener('mouseover', function(event) {
-        infoWindow.setContent(`Total distance: ${totalDistance}m`);
+        infoWindow.setContent(`Total distance: ${totalDistance.toFixed(2)}m`);
         infoWindow.setPosition(event.latLng);
         infoWindow.open(map);
     });
