@@ -165,26 +165,28 @@
     new google.maps.LatLng(21.036165853731504, 105.84839189265871),
     new google.maps.LatLng(21.036213419285374, 105.847724022614),
     new google.maps.LatLng(21.036265991722, 105.84706688140535),
-    new google.maps.LatLng(21.0339667963671, 105.84991132721396)
+    new google.maps.LatLng(21.0339667963671, 105.84991132721396),
+    new google.maps.LatLng(21.035064597604027, 105.84703579048059)
     ];
     let adj = {};
     for (let i = 0; i < intersections.length; i++)
     {
         adj[intersections[i].toString()] = [];
     }
+    adj[intersections[17].toString()].push(intersections[10], intersections[4]);
     adj[intersections[16].toString()].push(intersections[0]);
     adj[intersections[15].toString()].push(intersections[14], intersections[10]);
     adj[intersections[14].toString()].push(intersections[15], intersections[11], intersections[13]);
     adj[intersections[13].toString()].push(intersections[14], intersections[12]);
     adj[intersections[12].toString()].push(intersections[13], intersections[11], intersections[7]);
     adj[intersections[11].toString()].push(intersections[12], intersections[14], intersections[10], intersections[8]);
-    adj[intersections[10].toString()].push(intersections[9], intersections[15], intersections[11], intersections[4]);
+    adj[intersections[10].toString()].push(intersections[9], intersections[15], intersections[11], intersections[17]);
     adj[intersections[9].toString()].push(intersections[10]);
     adj[intersections[8].toString()].push(intersections[11], intersections[7], intersections[5]);
     adj[intersections[7].toString()].push(intersections[8], intersections[12], intersections[6]);
     adj[intersections[6].toString()].push(intersections[0], intersections[5], intersections[7]);
     adj[intersections[5].toString()].push(intersections[6], intersections[8], intersections[4], intersections[1]);
-    adj[intersections[4].toString()].push(intersections[3], intersections[5], intersections[10]);
+    adj[intersections[4].toString()].push(intersections[3], intersections[5], intersections[17]);
     adj[intersections[3].toString()].push(intersections[4], intersections[2]);
     adj[intersections[2].toString()].push(intersections[1], intersections[3]);
     adj[intersections[1].toString()].push(intersections[2], intersections[5], intersections[0]);
@@ -206,6 +208,7 @@
         }
         return 0;
     }
+    var totalDistance = 0;
     var path = new google.maps.Polyline({
                 path: [],
                 geodesic: true,
@@ -309,14 +312,29 @@
             {
                 Route.splice(siz - 2, 1);
             }
+            totalDistance = 0;
+            for (let i = 0; i < Route.length - 1; i++)
+            {
+                totalDistance += approximateDistance(Route[i], Route[i+1]);
+            }
             let pathCoordinates = Route.map(position => {
               return { lat: position.lat(), lng: position.lng() };
             });
-
             path.setPath(pathCoordinates);
         }
         console.log("Clicked inside the polygon at: ", clickedLocation.toString());
     }
+    });
+    let infoWindow = new google.maps.InfoWindow();
+
+    path.addListener('mouseover', function(event) {
+        infoWindow.setContent(`Total distance: ${totalDistance}m`);
+        infoWindow.setPosition(event.latLng);
+        infoWindow.open(map);
+    });
+
+    path.addListener('mouseout', function() {
+        infoWindow.close();
     });
     map.addListener('click', function(mapsMouseEvent)
     {
