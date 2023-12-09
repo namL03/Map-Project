@@ -190,15 +190,6 @@
     adj[intersections[1].toString()].push(intersections[2], intersections[5], intersections[0]);
     adj[intersections[0].toString()].push(intersections[1], intersections[6], intersections[16]);
 
-    for(let i = 0; i < intersections.length; i++)
-    {
-        let u = intersections[i];
-        for(let j = 0; j < adj[u.toString()].length; j++)
-        {
-            let v = adj[u.toString()][j];
-            console.log(u.toString(),"->",v.toString());
-        }
-    }
     function approximateDistance(latlng1, latlng2) {
         return google.maps.geometry.spherical.computeDistanceBetween(latlng1, latlng2);
     }
@@ -253,7 +244,7 @@
                 }
             }
         }
-        console.log("Nearest",a.toString(),nearestNode.toString());
+        //console.log("Nearest",a.toString(),nearestNode.toString());
         return nearestNode;
     }
     var totalDistance = 0;
