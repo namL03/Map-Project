@@ -190,16 +190,32 @@
     adj[intersections[1].toString()].push(intersections[2], intersections[5], intersections[0]);
     adj[intersections[0].toString()].push(intersections[1], intersections[6], intersections[16]);
 
-    function approximateDistance(latlng1, latlng2) {
-        return google.maps.geometry.spherical.computeDistanceBetween(latlng1, latlng2);
-    }
+    function toRadians(degrees) {
+  return degrees * Math.PI / 180;
+}
+
+function approximateDistance(latlng1, latlng2) {
+  var R = 6371000; 
+  var deltaLat = toRadians(latlng2.lat() - latlng1.lat());
+  var deltaLng = toRadians(latlng2.lng() - latlng1.lng());
+  var lat1 = toRadians(latlng1.lat());
+  var lat2 = toRadians(latlng2.lat());
+
+  var a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+          Math.cos(lat1) * Math.cos(lat2) *
+          Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c; 
+}
+
 
     function isLatLngEqual(a, b) {
         return a.lat === b.lat && a.lng === b.lng;
     }
 
     function isOnSegment(mid, a, b){
-        //console.log(mid.toString(), a.toString(), b.toString(), approximateDistance(mid,a) + approximateDistance(mid,b), approximateDistance(a,b))
+        console.log(mid.toString(), a.toString(), b.toString(), approximateDistance(mid,a) + approximateDistance(mid,b), approximateDistance(a,b))
         if(approximateDistance(mid,a) + approximateDistance(mid,b) - approximateDistance(a,b) < 2)
         {
             return 1;
@@ -244,7 +260,7 @@
                 }
             }
         }
-        //console.log("Nearest",a.toString(),nearestNode.toString());
+        console.log("Nearest",a.toString(),nearestNode.toString());
         return nearestNode;
     }
     var totalDistance = 0;
@@ -276,8 +292,8 @@
             let trace = {};
             let startIntersect = nearestIntersection(markerStart.getPosition());
             let endIntersect = nearestIntersection(markerEnd.getPosition());
-            //console.log("Start", startIntersect.toString());
-            //console.log("End", endIntersect.toString());
+            console.log("Start", startIntersect);
+            console.log("End", endIntersect.toString());
             openNodes.add(startIntersect);
             trace[startIntersect.toString()] = markerStart.getPosition();
             trace[markerEnd.getPosition().toString()] = endIntersect;
